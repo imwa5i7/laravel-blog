@@ -2,60 +2,27 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\File;
-use Spatie\YamlFrontMatter\YamlFrontMatter;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class Post
+class Post extends Model
 {
-    public $title;
-    public $slug;
-    public $excerpt;
-    public $date;
-    public $body;
+    use HasFactory;
 
-    public function __construct($t,$s,$e, $d, $b)
-    {
-        $this->title = $t;
-        $this->slug = $s;
-        $this->excerpt = $e;
-        $this->date = $d;
-        $this->body = $b;
-    }
+    // protected $guarded = ['id',];
+    //alter table posts AUTO_INCREMENT=6;
 
+    protected $fillable=['title','excerpt','slug','body','category_id'];
+    // public function getRouteKeyName()
+    // {
+    //     return 'slug';
+    // }
 
+    public function category(){
+        return $this->belongsTo(Category::class);
 
-
-    public static function all()
-    {
-        // $files =  File::allFiles(resource_path("posts/"));
-
-        // return array_map(
-        //     fn ($file) =>
-        //     $file->getContents(),
-        //     $files
-        // );
-
-        return Cache::rememberForever("posts.all",function(){
-            return collect(File::files(resource_path("posts")))->map(
-                fn ($file) => YamlFrontMatter::parseFile($file)
-            )->map(function ($document) {
-                return new Post($document->title,$document->slug,$document->excerpt, $document->date, $document->body(),);},)->sortByDesc('date');
-
-        });
-
-    }
-
-    public static function find($slug)
-    {
-        // $path = __DIR__ . "/../resources/posts/{$slug}.html";
-        // $path = resource_path("posts/$slug.html");
-
-
-        // if (!file_exists($path)) {
-        //     return new ModelNotFoundException();
-        // }
-        // return Cache::remember("posts.{$slug}", 1200, fn () => file_get_contents($path));
-        return static::all()->firstWhere('slug', $slug);
     }
 }
+
+
+

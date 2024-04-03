@@ -1,22 +1,24 @@
 <?php
 
+use App\Models\Category;
 use App\Models\Post;
-use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
-use Spatie\YamlFrontMatter\YamlFrontMatter;
 
 Route::get('/', function () {
-    $posts= Post::all();
+    // DB::listen(function ($query){
+    //     logger($query->sql,$query->bindings);
+    // });
     return view('posts', [
-        'posts' => $posts
+        // 'posts' => Post::all()
+        'posts' => Post::with('category')->get()
     ]);
 });
 
-Route::get('/posts/{post}', function ($input) {
 
-
-
-    return view('post', ['post' => Post::find($input)]);
+Route::get('/posts/{post:slug}', function (Post $post) {
+    //Post::where('slug',$post)->firstOrFail();
+    return view('post', ['post' => $post]);
 
     // $path=__DIR__ . "/../resources/posts/{$input}.html";
     // if(!file_exists($path)){
@@ -27,9 +29,15 @@ Route::get('/posts/{post}', function ($input) {
     //     var_dump("file_get_contents");
     //     return file_get_contents($path);
     // });
-    // $mypost=Cache::remember("posts.{$input}",now()->addMinutes(1), fn()=>file_get_contents($path));
 
     // return view('post',[
     //     'post' => $mypost
     // ]);
-})->where('post', '[A-z_\-]+');
+});
+
+
+Route::get('/categories/{category:slug}', function (Category $category) {
+    return view('posts', ['posts' => $category->posts]);
+});
+
+
