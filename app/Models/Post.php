@@ -10,9 +10,9 @@ class Post extends Model
     use HasFactory;
 
     // protected $guarded = ['id',];
-    //alter table posts AUTO_INCREMENT=6;
 
     protected $fillable=['title','excerpt','slug','body','category_id'];
+    protected $with=['author','category'];
     // public function getRouteKeyName()
     // {
     //     return 'slug';
@@ -20,6 +20,10 @@ class Post extends Model
 
     public function category(){
         return $this->belongsTo(Category::class);
+
+    }
+    public function author(){ //author_id
+        return $this->belongsTo(User::class,'user_id');
 
     }
 }
