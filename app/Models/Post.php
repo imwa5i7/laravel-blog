@@ -11,22 +11,27 @@ class Post extends Model
 
     // protected $guarded = ['id',];
 
-    protected $fillable=['title','excerpt','slug','body','category_id'];
-    protected $with=['author','category'];
+    protected $fillable = ['title', 'excerpt', 'slug', 'body', 'category_id'];
+    protected $with = ['author', 'category'];
     // public function getRouteKeyName()
     // {
     //     return 'slug';
     // }
 
-    public function category(){
-        return $this->belongsTo(Category::class);
-
+    public function scopeFilter($query, array $filters)
+    { //Post::newQuery::filter()
+        $query->when($filters['search'] ?? false, function ($query, $search) {
+            return $query->where('title', 'like', '%' . $search . '%')
+                ->orWhere('body', 'like', '%' . $search . '%');
+        });
     }
-    public function author(){ //author_id
-        return $this->belongsTo(User::class,'user_id');
 
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+    public function author()
+    { //author_id
+        return $this->belongsTo(User::class, 'user_id');
     }
 }
-
-
-
