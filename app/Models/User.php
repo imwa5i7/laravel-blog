@@ -20,6 +20,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'username'
     ];
 
     /**
@@ -44,6 +45,11 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+
+    // public function setPasswordAttribute($password){
+    //     return $this->attributes['password']=$password;
+    // }
 
     public function posts(){
 
