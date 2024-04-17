@@ -9,9 +9,7 @@ class Post extends Model
 {
     use HasFactory;
 
-    // protected $guarded = ['id',];
 
-    protected $fillable = ['title', 'excerpt', 'slug', 'body', 'category_id'];
     protected $with = ['author', 'category'];
     // public function getRouteKeyName()
     // {
@@ -46,6 +44,11 @@ class Post extends Model
 
             );
         });
+    }
+
+    public function comment()
+    {
+        return $this->hasMany(Comment::class);
     }
 
     public function category()
