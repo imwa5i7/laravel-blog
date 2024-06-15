@@ -9,8 +9,7 @@ class PostCommentController extends Controller
 
 
     public function store(){
-        // dd(request()->all());
-
+        dd(request()->all());
 
     }
 

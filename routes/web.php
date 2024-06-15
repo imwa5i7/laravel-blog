@@ -5,6 +5,7 @@ use App\Http\Controllers\PostCommentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\SessionsController;
+use App\Http\Middleware\MustBeAdmin;
 use Illuminate\Support\Facades\Route;
 
 
@@ -26,6 +27,11 @@ Route::post('login', [SessionsController::class, 'store'])->middleware('guest');
 
 
 Route::post('logout', [SessionsController::class, 'destroy'])->middleware('auth');
+
+Route::get('admin/posts/create', [PostController::class, 'create'])->middleware(MustBeAdmin::class);
+Route::post('admin/posts', [PostController::class, 'store'])->middleware(MustBeAdmin::class);
+
+
 
 
 
